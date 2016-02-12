@@ -1,0 +1,7 @@
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ndustrial-windows\bin\Debug\ndustrial-windows.dll
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ndustrial-windows\bin\Debug\ndustrial-windows.pdb
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ndustrial-windows\bin\Debug\Newtonsoft.Json.dll
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ndustrial-windows\bin\Debug\Newtonsoft.Json.xml
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ndustrial-windows\obj\Debug\ndustrial-windows.dll
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ndustrial-windows\obj\Debug\ndustrial-windows.pdb
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ndustrial-windows\obj\Debug\ndustrial-windows.csprojResolveAssemblyReference.cache

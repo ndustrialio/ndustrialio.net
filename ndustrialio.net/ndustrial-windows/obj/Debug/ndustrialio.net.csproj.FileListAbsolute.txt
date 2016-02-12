@@ -1,0 +1,6 @@
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ndustrial-windows\bin\Debug\ndustrialio.net.dll
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ndustrial-windows\bin\Debug\ndustrialio.net.pdb
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ndustrial-windows\bin\Debug\Newtonsoft.Json.dll
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ndustrial-windows\bin\Debug\Newtonsoft.Json.xml
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ndustrial-windows\obj\Debug\ndustrialio.net.dll
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ndustrial-windows\obj\Debug\ndustrialio.net.pdb

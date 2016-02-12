@@ -1,0 +1,10 @@
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe.config
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ConsoleApplication1\bin\Debug\ndustrial-windows.dll
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ConsoleApplication1\bin\Debug\Newtonsoft.Json.dll
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ConsoleApplication1\bin\Debug\ndustrial-windows.pdb
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ConsoleApplication1\bin\Debug\Newtonsoft.Json.xml
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ConsoleApplication1\obj\Debug\ndustrial-windows-test.csprojResolveAssemblyReference.cache
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
+C:\Users\jhunt\ndustrial-windows\ndustrial-windows\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb
