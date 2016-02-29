@@ -49,25 +49,23 @@ namespace com.ndustrialio.api.http
 
             try
             {
+                HttpWebResponse response;
+
                 // Get response, making sure to dispose of it properly
-                HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
-
-                // Process response
-                processResponse(response);
-
-                String data;
-
-                // Get response data
-                using (var reader = new StreamReader(response.GetResponseStream(),
-                    new System.Text.UTF8Encoding()))
+                using (response = (HttpWebResponse)webRequest.GetResponse())
                 {
-                    data = reader.ReadToEnd();
+                    String data;
+
+                    // Get response data
+                    using (var reader = new StreamReader(response.GetResponseStream(),
+                        new System.Text.UTF8Encoding()))
+                    {
+                        data = reader.ReadToEnd();
+                    }
+
+                    return new Response(response.StatusCode,
+                        response.StatusDescription, data);
                 }
-
-                response.Close();
-
-                return new Response(response.StatusCode,
-                    response.StatusDescription, data);
 
             } catch (WebException e)
             {
