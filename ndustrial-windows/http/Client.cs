@@ -47,27 +47,34 @@ namespace com.ndustrialio.api.http
                 webRequest.Headers.Add("Authorization", "Bearer " + _accessToken);
             }
 
-
-            HttpWebResponse response;
-
-            // Get response, making sure to dispose of it properly
-            using (response = (HttpWebResponse)webRequest.GetResponse())
+            try
             {
+                // Get response, making sure to dispose of it properly
+                HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+
                 // Process response
                 processResponse(response);
 
                 String data;
 
                 // Get response data
-                using (var reader = new StreamReader(response.GetResponseStream(), 
+                using (var reader = new StreamReader(response.GetResponseStream(),
                     new System.Text.UTF8Encoding()))
                 {
-                    data =  reader.ReadToEnd();
+                    data = reader.ReadToEnd();
                 }
+
+                response.Close();
 
                 return new Response(response.StatusCode,
                     response.StatusDescription, data);
+
+            } catch (WebException e)
+            {
+                processResponse((HttpWebResponse)e.Response);
             }
+
+
         }
 
         public bool AutoRefresh
