@@ -49,10 +49,8 @@ namespace com.ndustrialio.api.http
 
             try
             {
-                HttpWebResponse response;
-
                 // Get response, making sure to dispose of it properly
-                using (response = (HttpWebResponse)webRequest.GetResponse())
+                using (var response = (HttpWebResponse)webRequest.GetResponse())
                 {
                     String data;
 
@@ -69,10 +67,9 @@ namespace com.ndustrialio.api.http
 
             } catch (WebException e)
             {
-                processResponse((HttpWebResponse)e.Response);
+                processError((HttpWebResponse)e.Response);
+                return null;
             }
-
-
         }
 
         public bool AutoRefresh
@@ -102,15 +99,9 @@ namespace com.ndustrialio.api.http
             _accessToken = ret.AccessToken;
         }
 
-        private void processResponse(HttpWebResponse response)
+        private void processError(HttpWebResponse response)
         {
-            if (response.StatusCode == HttpStatusCode.OK || 
-                response.StatusCode == HttpStatusCode.Created ||
-                response.StatusCode == HttpStatusCode.NoContent)
-            {
-                // A-OK!
-                return;
-            } else if (response.StatusCode == HttpStatusCode.ServiceUnavailable ||
+            if (response.StatusCode == HttpStatusCode.ServiceUnavailable ||
                 response.StatusCode == HttpStatusCode.Forbidden)
             {
                 throw new InvalidAcccessTokenException(response.StatusDescription);
