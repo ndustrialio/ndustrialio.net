@@ -18,3 +18,13 @@ C:\Users\jhunt\ndustrialio.net\ndustrialio.net\ConsoleApplication1\bin\Debug\ndu
 C:\Users\jhunt\ndustrialio.net\ndustrialio.net\ConsoleApplication1\bin\Debug\ndustrialio.net-test.pdb
 C:\Users\jhunt\ndustrialio.net\ndustrialio.net\ConsoleApplication1\obj\Debug\ndustrialio.net-test.exe
 C:\Users\jhunt\ndustrialio.net\ndustrialio.net\ConsoleApplication1\obj\Debug\ndustrialio.net-test.pdb
+C:\Users\jhunt\ndustrialio.net\ConsoleApplication1\bin\Debug\ndustrialio.net-test.exe.config
+C:\Users\jhunt\ndustrialio.net\ConsoleApplication1\bin\Debug\ndustrialio.net-test.exe
+C:\Users\jhunt\ndustrialio.net\ConsoleApplication1\bin\Debug\ndustrialio.net-test.pdb
+C:\Users\jhunt\ndustrialio.net\ConsoleApplication1\bin\Debug\ndustrialio.net.dll
+C:\Users\jhunt\ndustrialio.net\ConsoleApplication1\bin\Debug\Newtonsoft.Json.dll
+C:\Users\jhunt\ndustrialio.net\ConsoleApplication1\bin\Debug\ndustrialio.net.pdb
+C:\Users\jhunt\ndustrialio.net\ConsoleApplication1\bin\Debug\Newtonsoft.Json.xml
+C:\Users\jhunt\ndustrialio.net\ConsoleApplication1\obj\Debug\ndustrialio.net-test.csprojResolveAssemblyReference.cache
+C:\Users\jhunt\ndustrialio.net\ConsoleApplication1\obj\Debug\ndustrialio.net-test.exe
+C:\Users\jhunt\ndustrialio.net\ConsoleApplication1\obj\Debug\ndustrialio.net-test.pdb

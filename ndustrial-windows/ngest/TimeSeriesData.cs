@@ -8,7 +8,9 @@ namespace com.ndustrialio.api.ngest
 {
     public class TimeSeriesData
     {
-        private String _feedKey, _feedTimeZone;
+        private String _feedKey;
+
+        private TimeZoneInfo _feedTimeZone;
 
         public static String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
@@ -20,7 +22,7 @@ namespace com.ndustrialio.api.ngest
         {
             _feedKey = feed_key;
 
-            _feedTimeZone = feed_timezone;
+            _feedTimeZone = TimeZoneInfo.FindSystemTimeZoneById(feed_timezone);
 
             _messages = new List<NgestMessage>();
 
@@ -30,8 +32,18 @@ namespace com.ndustrialio.api.ngest
 
         public void addValue(DateTime timestamp, String field, Object value)
         {
-            // Delocalize timestamp
-            DateTime delocalized = delocalizeTimestamp(timestamp);
+            DateTime delocalized;
+
+            // Delocalize timestamp, if it's not already UTC
+            if (_feedTimeZone != TimeZoneInfo.Utc)
+            {
+                delocalized = delocalizeTimestamp(timestamp);
+            } else
+            {
+                delocalized = timestamp;
+            }
+
+
 
             // Stringify timestamps.. basically
             String delocalizedStr = delocalized.ToString(TIMESTAMP_FORMAT);
@@ -66,11 +78,9 @@ namespace com.ndustrialio.api.ngest
 
         private DateTime delocalizeTimestamp(DateTime timestamp)
         {
-            // Look up timezone in system
-            TimeZoneInfo fromTimeZone = TimeZoneInfo.FindSystemTimeZoneById(_feedTimeZone);
 
             // Return delocalized timestamp
-            return TimeZoneInfo.ConvertTimeToUtc(timestamp, fromTimeZone);
+            return TimeZoneInfo.ConvertTimeToUtc(timestamp, _feedTimeZone);
         }
 
         public List<String> getJSONData()
