@@ -1,0 +1,7 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "/Users/jmhunt/.nuget/packages"
+    ]
+  }
+}

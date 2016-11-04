@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Net.Sockets;
+//using System.Net.Sockets;
+using System.Net.Http; 
+using System.Threading.Tasks;
+
 
 namespace com.ndustrialio.api.http
 {
@@ -11,15 +14,18 @@ namespace com.ndustrialio.api.http
         public const string URLENCODED_CONTENT_TYPE = "application/x-www-form-urlencoded";
         public const string JSON_CONTENT_TYPE = "application/json";
 
-        protected string _uri, _method, _contentType, _baseURL;
-        protected object _body;
+        protected string _uri, _contentType, _baseURL;
+        protected string _body;
         protected bool _authorize = true, _version = true;
          
+        protected HttpMethod _method;
         protected Dictionary<string, string> _params, _headers;
+
+        protected HttpClient _client;
 
         public APIRequest(String uri=null, 
             Dictionary<String, String> parameters=null, 
-            object body=null, 
+            string body=null, 
             string content_type=null)
         {
             _uri = uri;
@@ -28,26 +34,25 @@ namespace com.ndustrialio.api.http
             _contentType = content_type;
 
             _headers = new Dictionary<string, string>();
+
+            _client = new HttpClient();
         }
 
         public APIRequest contentType(string content_type)
         {
-            _headers.Add("Content-Type", content_type);
+            _contentType = content_type;
             return this;
         }
 
         public string contentType()
         {
-            string content_type = null;
-
-            _headers.TryGetValue("Content-Type", out content_type);
-
-            return content_type;
+            return _contentType;
         }
 
         public APIRequest baseURL(string base_url)
         {
             _baseURL = base_url;
+            _client.BaseAddress = new Uri(_baseURL);
             return this;
         }
 
@@ -56,6 +61,16 @@ namespace com.ndustrialio.api.http
             return _baseURL;
         }
 
+        public APIRequest version(bool version)
+        {
+            _version = version;
+            return this;
+        }
+
+        public bool version()
+        {
+            return _version;
+        }
         public APIRequest authorize(bool authorize)
         {
             _authorize = authorize;
@@ -79,13 +94,13 @@ namespace com.ndustrialio.api.http
             return _headers;
         }
 
-        public APIRequest method(string method)
+        public APIRequest method(HttpMethod method)
         {
             _method = method;
             return this;
         }
 
-        public string method()
+        public HttpMethod method()
         {
             return _method;
         }
@@ -117,98 +132,19 @@ namespace com.ndustrialio.api.http
 
         }
 
-        private APIResponse readResponse(Socket socket)
-
+        protected HttpRequestMessage toHttpRequestMessage()
         {
-            // Are we done reading HTTP response header yet?
-            bool finished = false;
-            // Content length of response body
-            int content_length = 0;
+            HttpRequestMessage ret = new HttpRequestMessage(_method, buildURI());
 
-            // This will be the HTTP response header
-            string headerString = "";
-
-            string sentinel = "bbbb";
-
-            while(!finished)
+            foreach(KeyValuePair<string, string> header in _headers)
             {
-                // Read response byte by byte
-                byte[] buffer = new byte[1];
-                socket.Receive(buffer, 0, 1, 0);
-
-                string headerBit = Encoding.UTF8.GetString(buffer);
-                // Build header string
-                headerString += headerBit;
-
-                // Keep track of sentinel
-                // Kinda like a fifo, we are looking for 
-                // \r\n\r\n
-                sentinel = sentinel.Substring(1);
-                sentinel += headerBit;
-
-                if (sentinel.Equals("\r\n\r\n"))
-                {                    
-                    // Header read is complete, 
-                    finished = true;
-                }
+                ret.Headers.Add(header.Key, header.Value);
             }
 
-            // Parse header
-            string[] header_chunks = headerString.Split(new string[] {"\r\n"}, StringSplitOptions.None);
-
-            // First line is status
-            string[] status_chunks = header_chunks[0].Split(' ');
-            int status_code = int.Parse(status_chunks[1]);
-            string status_description = status_chunks[2];
-
-
-            // Iterate over remaining header lines
-            foreach (string header_chunk in header_chunks)
-            {
-                if (header_chunk.StartsWith("Content-Lenth"))
-                {
-                    content_length = int.Parse(header_chunk.Split(':')[1].Trim());
-                }
-            }
-
-
-            // Find and parse content length
-            // Regex content_regex = new Regex("\\\r\nContent-Length: (.*?)\\\r\n");
-            // Match m = content_regex.Match(headerString);
-            // content_length = int.Parse(m.Groups[1].ToString());
-
-            // Read body and encode to string
-            byte[] body_buffer = new byte[content_length];
-            socket.Receive(body_buffer, 0, content_length, 0);
-            string body_string = Encoding.UTF8.GetString(body_buffer);
-            
-
-
-
-            return new APIResponse(status_code, status_description, body_string);
+            return ret;
         }
 
-        protected abstract string getRawHTTP();
-
-        public APIResponse execute()
-        {
-            string rawHTTP = getRawHTTP();
-
-            // Create and connect socket, will automatically dispose of it
-            using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
-            {
-                socket.Connect(_baseURL, 80);
-
-                // SEND HTTP REQUEST
-                socket.Send(Encoding.UTF8.GetBytes(rawHTTP));
-
-                // DECODE RESPONSE
-                var response = readResponse(socket);
-
-                return response;
-            }
-
-        }
+        public abstract Task<HttpResponseMessage> executeImpl();
 
         private String urlEncode(Dictionary<String, String> args)
         {
@@ -233,15 +169,15 @@ namespace com.ndustrialio.api.http
     {
         public GET(String uri=null, 
             Dictionary<String, String> parameters=null, 
-            object body=null, 
+            string body=null, 
             string content_type=null) : base(uri, parameters, body, content_type) 
             {
-                method("GET");
+                method(HttpMethod.Get);
             }
 
-        protected override string getRawHTTP()
+        public override Task<HttpResponseMessage> executeImpl()
         {
-            return RawHTTPRequest.GET(buildURI(), _baseURL, _headers);
+            return _client.SendAsync(this.toHttpRequestMessage());
         }
     }
 
@@ -249,18 +185,22 @@ namespace com.ndustrialio.api.http
     {
         public POST(String uri=null, 
             Dictionary<String, String> parameters=null, 
-            object body=null, 
+            string body=null, 
             string content_type=null) : base(uri, parameters, body, content_type) 
             {
-                method("POST");
+                method(HttpMethod.Post);
 
-                // this can be overridden 
+                // this can be changed later 
                 contentType(JSON_CONTENT_TYPE);
             }
 
-        protected override string getRawHTTP()
+        public override Task<HttpResponseMessage> executeImpl()
         {
-            throw new NotImplementedException();
+            HttpRequestMessage message = this.toHttpRequestMessage();
+
+            message.Content = new StringContent(_body, Encoding.UTF8, contentType());
+
+            return _client.SendAsync(message);
         }
     }
 
@@ -268,15 +208,22 @@ namespace com.ndustrialio.api.http
     {
         public PUT(String uri=null, 
             Dictionary<String, String> parameters=null, 
-            object body=null, 
+            string body=null, 
             string content_type=null) : base(uri, parameters, body, content_type) 
             {
-                method("PUT");
+                // this can be changed later 
+                contentType(JSON_CONTENT_TYPE);
+
+                method(HttpMethod.Put);
             }
 
-        protected override string getRawHTTP()
+        public override Task<HttpResponseMessage> executeImpl()
         {
-            throw new NotImplementedException();
+            HttpRequestMessage message = this.toHttpRequestMessage();
+
+            message.Content = new StringContent(_body, Encoding.UTF8, contentType());
+
+            return _client.SendAsync(message);
         }
     }
 
@@ -284,17 +231,16 @@ namespace com.ndustrialio.api.http
     {
         public DELETE(String uri=null, 
             Dictionary<String, String> parameters=null, 
-            object body=null, 
+            string body=null, 
             string content_type=null) : base(uri, parameters, body, content_type) 
             {
-                method("DELETE");
+                method(HttpMethod.Delete);
             }
 
-        protected override string getRawHTTP()
+
+        public override Task<HttpResponseMessage> executeImpl()
         {
-            throw new NotImplementedException();
+            return _client.SendAsync(this.toHttpRequestMessage());
         }
     }
-
-
 }

@@ -1,4 +1,3 @@
-using com.ndustrialio.api.http;
 using System;
 
 namespace com.ndustrialio.api.services
@@ -13,7 +12,7 @@ namespace com.ndustrialio.api.services
                 access_token = Environment.GetEnvironmentVariable("ACCESS_TOKEN");
             }
 
-            _client = new Client(access_token);
+            _accessToken = access_token;
         }
 
         public override string baseURL()
