@@ -78,6 +78,89 @@ namespace com.ndustrialio.api.services
 
                                     
         }
+
+        public object getUnprovisionedFieldDescriptors(int feed_id, int limit=100, int offset=0)
+        {
+            object[] uriChunks = {FeedService.URI, feed_id, "fields", "unprovisioned"};
+
+            Dictionary<string, string> requestParams = new Dictionary<string, string>()
+            {
+                {"limit", limit.ToString()},
+                {"offset", offset.ToString()}
+            };
+
+            APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks), 
+                                                    parameters: requestParams));
+
+            dynamic ret = JObject.Parse(response.ToString());
+
+            return ret;
+        }
+
+
+        public object getFeedOutputs(int feed_id, int limit=100, int offset=0)
+        {
+            object[] uriChunks = {FeedService.URI, feed_id, "outputs"};
+
+            Dictionary<string, string> requestParams = new Dictionary<string, string>()
+            {
+                {"limit", limit.ToString()},
+                {"offset", offset.ToString()}
+            };
+
+            APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks), 
+                                                    parameters: requestParams));
+
+            dynamic ret = JObject.Parse(response.ToString());
+
+            return ret;
+        }
+
+        public object getData(int output_id, string field_human_name, int window, DateTime time_start, DateTime? time_end=null)
+        {
+            object[] uriChunks = {"outputs", output_id, "fields", field_human_name, "data"};
+
+            Dictionary<string, string> requestParams = new Dictionary<string, string>()
+            {
+                // Convert to epoch-seconds
+                {"timeStart", time_start.Subtract(new DateTime(1970,1,1,0,0,0, DateTimeKind.Utc)).TotalSeconds.ToString()},
+            };
+
+            if (time_end != null)
+            {
+                requestParams.Add("timeEnd", time_end.Value.Subtract(new DateTime(1970,1,1,0,0,0, DateTimeKind.Utc)).TotalSeconds.ToString())
+            }
+
+            APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks), 
+                                                    parameters: requestParams));
+
+            dynamic ret = JObject.Parse(response.ToString());
+
+            return ret;
+        }
+
+        public object getUnprovisionedData(int feed_id, string field_descriptor, int window, DateTime time_start, DateTime? time_end=null)
+        {
+            object[] uriChunks = {"feeds", feed_id, "fields", field_descriptor, "data"};
+
+            Dictionary<string, string> requestParams = new Dictionary<string, string>()
+            {
+                // Convert to epoch-seconds
+                {"timeStart", time_start.Subtract(new DateTime(1970,1,1,0,0,0, DateTimeKind.Utc)).TotalSeconds.ToString()},
+            };
+
+            if (time_end != null)
+            {
+                requestParams.Add("timeEnd", time_end.Value.Subtract(new DateTime(1970,1,1,0,0,0, DateTimeKind.Utc)).TotalSeconds.ToString())
+            }
+
+            APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks), 
+                                                    parameters: requestParams));
+
+            dynamic ret = JObject.Parse(response.ToString());
+
+            return ret;
+        }
 	}
 	
 }
