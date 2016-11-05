@@ -1,59 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 
 using com.ndustrialio.api.http;
 
 namespace com.ndustrialio.api.services
 {
-    public class FeedType
-    {
-        [JsonProperty("id")]
-        public int ID { get; set; }
-
-        [JsonProperty("type")]
-        public String Type { get; set; }
-    }
-
-	public class FeedData
-    {
-        [JsonProperty("id")]
-        public int ID { get; set; }
-
-        [JsonProperty("facility_id")]
-        public int FacilityID { get; set; }
-
-        [JsonProperty("description")]
-        public String Description { get; set; }
-
-        [JsonProperty("key")]
-        public String FeedKey { get; set; }
-
-        //[JsonProperty("routing_keys")]
-        //public List<String> RoutingKeys { get; set; }
-
-        [JsonProperty("token")]
-        public String FeedToken { get; set; }
-
-        [JsonProperty("timezone")]
-        public String TimeZone { get; set; }
-
-        [JsonProperty("feed_type")]
-        public FeedType FeedType { get; set; }
-
-        [JsonProperty("status")]
-        public String Status { get; set; }
-
-        [JsonProperty("created_at")]
-        public String CreatedAt { get; set; }
-    }
-
 
 	public class FeedService : Service
 	{
-		public static String URI = "/feeds";
+		public static String URI = "/feeds"; 
 		
 		
 		public FeedService(string client_id, string client_secret=null) : base(client_id, client_secret) { }
@@ -68,20 +25,24 @@ namespace com.ndustrialio.api.services
             return "https://feeds.api.ndustrial.io";
         }
 
-		public FeedData getFeeds(object id=null, Dictionary <String, String> parameters=null)
+        public object getFeeds(Dictionary <String, String> parameters=null)
+        {
+
+            APIResponse response = this.execute(new GET(uri:FeedService.URI, parameters:parameters));
+
+            dynamic ret = JArray.Parse(response.ToString());
+
+            return ret;
+        }
+
+		public object getFeed(int id)
 		{
-			string uri = FeedService.URI;
+			string uri = FeedService.URI + "/" + id;
 			
-            if (id != null)
-            {
-                uri += "/";
-                uri += id;
-            }
 
             APIResponse response = this.execute(new GET(uri));
 
-            Dictionary<string, string> ret = 
-                        JsonConvert.DeserializeObject<Dictionary<string, string>>(response.ToString());
+            dynamic ret = JObject.Parse(response.ToString());
 
             return ret;
         }
@@ -98,7 +59,7 @@ namespace com.ndustrialio.api.services
 
         // return self.execute(GET('feeds/{}/fields'.format(feed_id)).params(params), execute=execute)
 
-        public FeedData getFieldDescriptors(int feed_id, int limit=100, int offset=0)
+        public object getFieldDescriptors(int feed_id, int limit=100, int offset=0)
         {
             object[] uriChunks = {FeedService.URI, feed_id, "fields"};
 
@@ -111,8 +72,7 @@ namespace com.ndustrialio.api.services
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks), 
                                                     parameters: requestParams));
 
-            FeedData ret = 
-                        JsonConvert.DeserializeObject<FeedData>(response.ToString());
+            dynamic ret = JObject.Parse(response.ToString());
 
             return ret;
 
