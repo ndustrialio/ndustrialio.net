@@ -26,7 +26,12 @@ namespace ConsoleApplication
 
             Console.WriteLine("Got " + fields.records.Count + " fields for id 300");
 
+            dynamic location_info = weather.getLocationInfo(location_id:14);
+
+            Console.WriteLine(location_info.city);
+
             dynamic chicago_forecast = weather.getForecast(location_id: 14);
+
 
             foreach (dynamic day in chicago_forecast)
             {

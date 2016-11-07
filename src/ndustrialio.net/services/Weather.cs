@@ -27,10 +27,32 @@ namespace com.ndustrialio.api.services
 
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks)));
 
-            dynamic ret = JObject.Parse(response.ToString());
+            dynamic ret = JArray.Parse(response.ToString());
 
             return ret;
 
+        }
+
+        public object getLocations()
+        {
+            object[] uriChunks = {"locations"};
+
+            APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks)));
+
+            dynamic ret = JArray.Parse(response.ToString());
+
+            return ret;
+        }
+
+        public object getLocationInfo(int location_id)
+        {
+            object[] uriChunks = {"locations", location_id};
+
+            APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks)));
+
+            dynamic ret = JObject.Parse(response.ToString());
+
+            return ret;
         }
     }
 
