@@ -10,7 +10,7 @@ namespace com.ndustrialio.api.services
 
 	public class FeedService : Service
 	{
-		public static String URI = "/feeds"; 
+		public static String URI = "feeds"; 
 		
 		
 		public FeedService(string client_id, string client_secret=null) : base(client_id, client_secret) { }
@@ -116,6 +116,18 @@ namespace com.ndustrialio.api.services
             return ret;
         }
 
+        public object getOutputFields(int output_id)
+        {
+            object[] uriChunks = {"outputs", output_id, "fields"};
+
+            APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks)));
+
+            dynamic ret = JObject.Parse(response.ToString());
+
+            return ret;
+
+        }
+
         public object getData(int output_id, string field_human_name, int window, DateTime time_start, DateTime? time_end=null)
         {
             object[] uriChunks = {"outputs", output_id, "fields", field_human_name, "data"};
@@ -128,7 +140,7 @@ namespace com.ndustrialio.api.services
 
             if (time_end != null)
             {
-                requestParams.Add("timeEnd", time_end.Value.Subtract(new DateTime(1970,1,1,0,0,0, DateTimeKind.Utc)).TotalSeconds.ToString())
+                requestParams.Add("timeEnd", time_end.Value.Subtract(new DateTime(1970,1,1,0,0,0, DateTimeKind.Utc)).TotalSeconds.ToString());
             }
 
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks), 
@@ -151,7 +163,7 @@ namespace com.ndustrialio.api.services
 
             if (time_end != null)
             {
-                requestParams.Add("timeEnd", time_end.Value.Subtract(new DateTime(1970,1,1,0,0,0, DateTimeKind.Utc)).TotalSeconds.ToString())
+                requestParams.Add("timeEnd", time_end.Value.Subtract(new DateTime(1970,1,1,0,0,0, DateTimeKind.Utc)).TotalSeconds.ToString());
             }
 
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks), 

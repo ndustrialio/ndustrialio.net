@@ -12,6 +12,10 @@ namespace ConsoleApplication
 
             FeedService feeds = new FeedService(client_id: client_id,
                                                 client_secret: client_secret);
+
+            WeatherService weather = new WeatherService(client_id: client_id,
+                                                        client_secret: client_secret);
+
             dynamic feedData = feeds.getFeed(id:300);
 
             string key = feedData.key;
@@ -21,6 +25,13 @@ namespace ConsoleApplication
             dynamic fields = feeds.getFieldDescriptors(feed_id:300);
 
             Console.WriteLine("Got " + fields.records.Count + " fields for id 300");
+
+            dynamic chicago_forecast = weather.getForecast(location_id: 14);
+
+            foreach (dynamic day in chicago_forecast)
+            {
+                Console.WriteLine(day.date + ": High: "+day.forecast_high + ", Low: " + day.forecast_low);
+            }
            
         }
     }

@@ -112,7 +112,7 @@ namespace com.ndustrialio.api.http
 
             if (_version)
             {
-                sb.Append("/v1");
+                sb.Append("/v1/");
             }
 
             if (_uri != null)
