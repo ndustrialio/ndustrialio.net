@@ -7,7 +7,7 @@ namespace com.ndustrialio.api.services
     public class NgestService : LegacyService
     {
 
-        public Ngest() : base() { }
+        public NgestService() : base() { }
 
         public override string baseURL()
         {
