@@ -4,7 +4,7 @@ using com.ndustrialio.api.http;
 
 namespace com.ndustrialio.api.services
 {
-    public class Ngest : LegacyService
+    public class NgestService : LegacyService
     {
 
         public Ngest() : base() { }
