@@ -17,9 +17,6 @@ namespace com.ndustrialio.api.ngest
 
         private TimeZoneInfo _timeZone;
 
-        private String _postURL;
-
-
         public NgestClient(string feed_key, string feed_token, string feed_timezone)
 		{
 			_feedKey = feed_key;
