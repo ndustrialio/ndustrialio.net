@@ -6,3 +6,8 @@ src/ndustrialio.net/project.json
 src/ndustiralio.net/project.lock.json
 src/app/project.json
 src/app/project.lock.json
+*.user
+*.sln
+/src/ndustrialio.net/project.lock.json
+*.csproj
+/src/ndustrialio.net/bin/Debug
