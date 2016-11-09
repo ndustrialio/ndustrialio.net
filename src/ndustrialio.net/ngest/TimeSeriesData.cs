@@ -33,6 +33,7 @@ namespace com.ndustrialio.api.ngest
         {
             DateTime delocalized;
 
+
             // Delocalize timestamp, if it's not already UTC
             if (_feedTimeZone != TimeZoneInfo.Utc)
             {

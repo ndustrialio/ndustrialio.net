@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using com.ndustrialio.api.services;
+using System.Threading.Tasks;
+using com.ndustrialio.api.http;
 
 
 namespace com.ndustrialio.api.ngest
@@ -68,15 +70,29 @@ namespace com.ndustrialio.api.ngest
 
         }
 
+        public async Task<APIResponse[]> sendDataAsync(TimeSeriesData data)
+        {
+            List<String> dataToSend = data.getJSONData();
+
+            NgestService ngest = new NgestService();
+
+            
+            var response_tasks = new List<Task<APIResponse>>();
+
+            // Ask the Ngest API service to send the data for us
+            // Asyncrhonously
+            foreach (var d in dataToSend)
+            {
+                response_tasks.Add(ngest.sendDataAsync(_feedToken, _feedKey, d));
+            }
+            var ret = await Task.WhenAll(response_tasks);    
+
+            return ret;
+        }
+
         public TimeSeriesData newTimeSeries()
         {
             return new TimeSeriesData(_feedKey, _timeZone);
-        }
-
-        public void sendDataAsync(TimeSeriesData data)
-        {
-            Thread thread = new Thread(() => sendData(data));
-            thread.Start();
         }
 
     }
