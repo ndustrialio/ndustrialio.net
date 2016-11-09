@@ -2,3 +2,7 @@
 src/app/obj/
 src/app/bin/
 src/ndustrialio.net/obj/
+*.sln
+*.csproj
+*.user
+*.targets
