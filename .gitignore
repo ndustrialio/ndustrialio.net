@@ -10,3 +10,6 @@ src/app/project.lock.json
 /src/ndustrialio.net/project.lock.json
 *.csproj
 /src/ndustrialio.net/bin/Debug
+/src/ndustrialio.net/.vs/
+/src/app/.vs/
+
