@@ -2,3 +2,7 @@
 src/app/obj/
 src/app/bin/
 src/ndustrialio.net/obj/
+src/ndustrialio.net/project.json
+src/ndustiralio.net/project.lock.json
+src/app/project.json
+src/app/project.lock.json
