@@ -19,14 +19,14 @@ namespace ConsoleApplication
             }
 
 
-            Dictionary<string, SetpointData> buildingSetpoints = 
-                flywheel.getSetPointsForBuilding(building_id:"46445500-6542-4c8c-a250-1093ef17a71f");
+            Dictionary<string, SetpointData> systemSetpoints = 
+                flywheel.getSetPointsForSystem(system_id:"228fc7a1-f410-409a-8f70-7602a5669a24");
 
-            foreach(KeyValuePair<string, SetpointData> building_setpoint in buildingSetpoints)
+            foreach(KeyValuePair<string, SetpointData> system_setpoint in systemSetpoints)
             {
-                Console.WriteLine("Building name" + building_setpoint.Key);
+                Console.WriteLine("System name" + system_setpoint.Key);
 
-                foreach(KeyValuePair<DateTime, bool> setpoint in building_setpoint.Value)
+                foreach(KeyValuePair<DateTime, bool> setpoint in system_setpoint.Value)
                 {
                     Console.WriteLine("\tAt " + setpoint.Key + ": " + setpoint.Value);
                 }

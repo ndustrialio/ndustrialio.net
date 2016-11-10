@@ -76,9 +76,9 @@ namespace com.ndustrialio.api.services
 
         }
 
-        public Dictionary<string, SetpointData> getSetPointsForBuilding(string building_id)
+        public Dictionary<string, SetpointData> getSetPointsForSystem(string system_id)
         {
-            object[] uriChunks = {"buildings", building_id, "runs", "data"};
+            object[] uriChunks = {"systems", system_id, "runs", "data"};
 
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks)));
 
