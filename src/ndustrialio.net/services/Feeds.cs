@@ -13,7 +13,7 @@ namespace com.ndustrialio.api.services
 		public static String URI = "feeds"; 
 		
 		
-		public FeedService(string client_id, string client_secret=null) : base(client_id, client_secret) { }
+		public FeedService(string client_id=null, string client_secret=null) : base(client_id, client_secret) { }
 
         public override string audience()
         {

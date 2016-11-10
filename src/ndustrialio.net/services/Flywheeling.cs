@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using com.ndustrialio.api.http;
 using Newtonsoft.Json.Linq;
 
@@ -7,23 +8,20 @@ using Newtonsoft.Json.Linq;
 namespace com.ndustrialio.api.services
 {
 
-    // In case we ever need it
-    // public class SetpointData : JObject
-    // {
-    //     public void add(DateTime timestamp, bool value)
-    //     {
-
-    //     }
-
-    //     public void add(int timestamp, bool value)
-    //     {
-
-    //     }
-    // }
+    public class SetpointData : Dictionary<DateTime, bool>
+    {
+        public SetpointData(JObject json) : base()
+        {
+            foreach(var setpoint in json)
+            {
+                this.Add(DateTime.Parse(setpoint.Key), setpoint.Value.ToObject<bool>());
+            }
+        }
+    }
 
     public class FlywheelingService : Service
     {
-        public FlywheelingService(string client_id, string client_secret=null) : base(client_id, client_secret) {}
+        public FlywheelingService(string client_id=null, string client_secret=null) : base(client_id, client_secret) {}
 
         public override string audience()
         {
@@ -76,6 +74,38 @@ namespace com.ndustrialio.api.services
 
             return ret;
 
+        }
+
+        public Dictionary<string, SetpointData> getSetPointsForBuilding(string building_id)
+        {
+            object[] uriChunks = {"buildings", building_id, "runs", "data"};
+
+            APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks)));
+
+
+            var ret = new Dictionary<string, SetpointData>();
+
+
+            // Decode and package response data
+            JObject responseData = JObject.Parse(response.ToString());
+
+            foreach (var data in responseData)
+            {
+                ret.Add(data.Key, new SetpointData(data.Value.ToObject<JObject>()));
+            }
+
+            return ret;
+        }
+
+        public SetpointData getSetPointsForZone(string zone_id)
+        {
+            object[] uriChunks = {"zones", zone_id, "runs", "data"};
+
+            APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks)));
+
+            SetpointData ret = new SetpointData(JObject.Parse(response.ToString()));
+
+            return ret;
         }
     }
 }

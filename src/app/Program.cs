@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using com.ndustrialio.api.services;
 
 namespace ConsoleApplication
@@ -7,36 +8,31 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
-            string client_id = "o0Q9GPrsAvNsofW610VZkk6RMNnxdUwh";
-            string client_secret= "UqyLe3XRkD6c7HqHgBuOmWiaXSc_DmzKzi1Z5aNdAOkKIC5A_u-1H2bSeaG6ZV4l";
+            // Initialize Flywheeling services
+            var flywheel = new FlywheelingService();
 
-            FeedService feeds = new FeedService(client_id: client_id,
-                                                client_secret: client_secret);
+            SetpointData setpoints = flywheel.getSetPointsForZone(zone_id:"7d5ef0d8-e00b-448b-aa04-59caf22ce91e");
 
-            WeatherService weather = new WeatherService(client_id: client_id,
-                                                        client_secret: client_secret);
-
-            dynamic feedData = feeds.getFeed(id:300);
-
-            string key = feedData.key;
-
-            Console.WriteLine("Got feed ID 3000, key " + key);
-
-            dynamic fields = feeds.getFieldDescriptors(feed_id:300);
-
-            Console.WriteLine("Got " + fields.records.Count + " fields for id 300");
-
-            dynamic location_info = weather.getLocationInfo(location_id:14);
-
-            Console.WriteLine(location_info.city);
-
-            dynamic chicago_forecast = weather.getForecast(location_id: 14);
-
-
-            foreach (dynamic day in chicago_forecast)
+            foreach(KeyValuePair<DateTime, bool> setpoint in setpoints)
             {
-                Console.WriteLine(day.date + ": High: "+day.forecast_high + ", Low: " + day.forecast_low);
+                Console.WriteLine("At " + setpoint.Key + ": " + setpoint.Value);
             }
+
+
+            Dictionary<string, SetpointData> buildingSetpoints = 
+                flywheel.getSetPointsForBuilding(building_id:"46445500-6542-4c8c-a250-1093ef17a71f");
+
+            foreach(KeyValuePair<string, SetpointData> building_setpoint in buildingSetpoints)
+            {
+                Console.WriteLine("Building name" + building_setpoint.Key);
+
+                foreach(KeyValuePair<DateTime, bool> setpoint in building_setpoint.Value)
+                {
+                    Console.WriteLine("\tAt " + setpoint.Key + ": " + setpoint.Value);
+                }
+            }
+
+
            
         }
     }

@@ -1,8 +1,6 @@
 
-using com.ndustrialio.api.http;
 using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+
 
 namespace com.ndustrialio.api.services
 {
@@ -12,9 +10,14 @@ namespace com.ndustrialio.api.services
     public abstract class Service : APIService
     {
 
-        public Service(string client_id, string client_secret = null)
+        public Service(string client_id = null, string client_secret = null)
         {
-            // Figure out client secret
+            // Figure out client id/secret
+            if (client_id == null)
+            {
+                client_id = Environment.GetEnvironmentVariable("CLIENT_ID");
+            }
+
             if (client_secret == null)
             {
                 client_secret = Environment.GetEnvironmentVariable("CLIENT_SECRET");
