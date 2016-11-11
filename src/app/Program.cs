@@ -11,13 +11,14 @@ namespace ConsoleApplication
             // Initialize Flywheeling services
             var flywheel = new FlywheelingService();
 
-            SetpointData setpoints = flywheel.getSetPointsForZone(zone_id:"7d5ef0d8-e00b-448b-aa04-59caf22ce91e");
+            var facility_systems = flywheel.getNodes();
 
-            foreach(KeyValuePair<DateTime, bool> setpoint in setpoints)
+            var systems = facility_systems[42];
+
+            foreach (var system in systems)
             {
-                Console.WriteLine("At " + setpoint.Key + ": " + setpoint.Value);
+                Console.WriteLine(system.SystemID);
             }
-
 
             Dictionary<string, SetpointData> systemSetpoints = 
                 flywheel.getSetPointsForSystem(system_id:"228fc7a1-f410-409a-8f70-7602a5669a24");

@@ -19,6 +19,29 @@ namespace com.ndustrialio.api.services
         }
     }
 
+    public class FlywheelingNode
+    {
+        private string _systemID, _edgeNodeID;
+
+
+        public FlywheelingNode(JObject json)
+        {
+            _systemID = (string)json["system_id"];
+            _edgeNodeID = (string)json["edge_node_id"];
+
+        }
+
+        public string SystemID
+        {
+            get { return _systemID; }
+        }
+
+        public string EdgeNodeID
+        {
+            get { return _edgeNodeID; }
+        }
+    }
+
     public class FlywheelingService : Service
     {
         public FlywheelingService(string client_id=null, string client_secret=null) : base(client_id, client_secret) {}
@@ -107,5 +130,30 @@ namespace com.ndustrialio.api.services
 
             return ret;
         }
+
+        public Dictionary<int, List<FlywheelingNode>> getNodes()
+        {
+            object[] uriChunks = {"systems", "node"};
+
+            APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks)));
+
+            var responseData = JObject.Parse(response.ToString());
+
+            int facility_id = (int)responseData["facility_id"];
+
+            var ret = new Dictionary<int, List<FlywheelingNode>>();
+
+            var nodeList = new List<FlywheelingNode>();
+
+            ret.Add(facility_id, nodeList);
+
+            foreach (var node in responseData["FlywheelingNodes"])
+            {
+                nodeList.Add(new FlywheelingNode((JObject)node));
+            }
+
+            return ret;
+
+        } 
     }
 }
