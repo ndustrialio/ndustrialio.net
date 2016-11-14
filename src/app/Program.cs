@@ -17,21 +17,24 @@ namespace ConsoleApplication
 
             foreach (var system in systems)
             {
-                Console.WriteLine(system.SystemID);
-            }
+                Console.WriteLine("System: " + system.SystemID);
 
-            Dictionary<string, SetpointData> systemSetpoints = 
-                flywheel.getSetPointsForSystem(system_id:"228fc7a1-f410-409a-8f70-7602a5669a24");
 
-            foreach(KeyValuePair<string, SetpointData> system_setpoint in systemSetpoints)
-            {
-                Console.WriteLine("System name" + system_setpoint.Key);
+                Dictionary<string, SetpointData> systemSetpoints = 
+                    flywheel.getSetPointsForSystem(system_id:system.SystemID);
 
-                foreach(KeyValuePair<DateTime, bool> setpoint in system_setpoint.Value)
+                foreach(KeyValuePair<string, SetpointData> system_setpoint in systemSetpoints)
                 {
-                    Console.WriteLine("\tAt " + setpoint.Key + ": " + setpoint.Value);
+                    Console.WriteLine("System name" + system_setpoint.Key);
+
+                    foreach(KeyValuePair<DateTime, bool> setpoint in system_setpoint.Value)
+                    {
+                        Console.WriteLine("\tAt " + setpoint.Key + ": " + setpoint.Value);
+                    }
                 }
             }
+
+
 
 
            

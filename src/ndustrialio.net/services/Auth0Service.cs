@@ -8,9 +8,9 @@ namespace com.ndustrialio.api.services
     public class Auth0Service : APIService
 
     {
-        public override string baseURL()
+        public override string BaseURL
         {
-            return "https://ndustrialio.auth0.com";
+            get{return "https://ndustrialio.auth0.com";}
         }
 
         public string getAccessToken(string client_id, 

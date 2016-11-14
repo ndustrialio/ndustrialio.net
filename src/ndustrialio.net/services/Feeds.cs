@@ -15,14 +15,14 @@ namespace com.ndustrialio.api.services
 		
 		public FeedService(string client_id=null, string client_secret=null) : base(client_id, client_secret) { }
 
-        public override string audience()
+        public override string Audience
         {
-            return "iznTb30Sfp2Jpaf398I5DN6MyPuDCftA";
+            get{return "iznTb30Sfp2Jpaf398I5DN6MyPuDCftA";}
         }
 
-        public override string baseURL()
+        public override string BaseURL
         {
-            return "https://feeds.api.ndustrial.io";
+            get{return "https://feeds.api.ndustrial.io";}
         }
 
         public object getFeeds(Dictionary <String, String> parameters=null)

@@ -12,13 +12,25 @@ namespace com.ndustrialio.api.services
     {
         protected string _accessToken;
 
-        public abstract string baseURL();
+        // By default, throw exception on HTTP error
+        protected bool _exceptOnError = true;
+
+        public abstract string BaseURL
+        {
+            get;
+        }
 
 
-        public APIResponse execute(APIRequest request)
+        public bool ExceptionOnHttpError
+        {
+            get {return _exceptOnError;}
+            set {_exceptOnError = value;}
+        }
+
+        public virtual APIResponse execute(APIRequest request)
         {
             // Set baseURL
-            request.baseURL(baseURL());
+            request.baseURL(this.BaseURL);
 
             // Set headers
             if (request.authorize())
@@ -31,19 +43,13 @@ namespace com.ndustrialio.api.services
 
             APIResponse response = new APIResponse((int)httpResponse.StatusCode,
                                                 httpResponse.ReasonPhrase, 
-                                                httpResponse.Content.ReadAsStringAsync().Result);
+                                                httpResponse.Content.ReadAsStringAsync().Result, 
+                                                _exceptOnError);                     
 
-            if (!response.isSuccess())
-            {
-                throw new Exception(response.responseData);
-            } else
-            {
-                return response;
-            }                         
-
+            return response;
         }
 
-        public async Task<APIResponse> executeAsync(APIRequest request)
+        public virtual async Task<APIResponse> executeAsync(APIRequest request)
         {
             // Set authorization headers
             if (request.authorize())
@@ -56,7 +62,8 @@ namespace com.ndustrialio.api.services
 
             return new APIResponse((int)httpResponse.StatusCode,
                         httpResponse.ReasonPhrase, 
-                        httpResponse.Content.ReadAsStringAsync().Result);
+                        httpResponse.Content.ReadAsStringAsync().Result,
+                        _exceptOnError);
         }
         
     }

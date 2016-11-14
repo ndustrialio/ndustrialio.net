@@ -10,9 +10,9 @@ namespace com.ndustrialio.api.services
 
         public NgestService() : base() { }
 
-        public override string baseURL()
+        public override string BaseURL
         {
-            return "https://data.ndustrial.io";
+            get{return "https://data.ndustrial.io";}
         }
 
         public void sendData(string feedToken, string feedKey, string data)

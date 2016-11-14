@@ -15,9 +15,9 @@ namespace com.ndustrialio.api.services
             _accessToken = access_token;
         }
 
-        public override string baseURL()
+        public override string BaseURL
         {
-            return "https://api.ndustrial.io";
+            get{return "https://api.ndustrial.io";}
         }
 
         

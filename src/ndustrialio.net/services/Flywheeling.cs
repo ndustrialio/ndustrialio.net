@@ -46,14 +46,14 @@ namespace com.ndustrialio.api.services
     {
         public FlywheelingService(string client_id=null, string client_secret=null) : base(client_id, client_secret) {}
 
-        public override string audience()
+        public override string Audience
         {
-            return "GvjVT0O7PO1biyzABeqInlodVbN9TsCf";
+            get {return "GvjVT0O7PO1biyzABeqInlodVbN9TsCf";}
         }
 
-        public override string baseURL()
+        public override string BaseURL
         {
-            return "https://flywheeling.api.ndustrial.io";
+            get {return "https://flywheeling.api.ndustrial.io";}
         }
 
         public object getRuns()

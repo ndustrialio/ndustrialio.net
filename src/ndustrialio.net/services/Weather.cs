@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using com.ndustrialio.api.http;
 
@@ -11,14 +10,14 @@ namespace com.ndustrialio.api.services
     {
 		public WeatherService(string client_id, string client_secret=null) : base(client_id, client_secret) { }
 
-        public override string audience()
+        public override string Audience
         {
-            return "cFhOshImtabrVBHzPtwtOLYOT2Mp8IAh";
+            get{return "cFhOshImtabrVBHzPtwtOLYOT2Mp8IAh";}
         }
 
-        public override string baseURL()
+        public override string BaseURL
         {
-            return "https://weather.api.ndustrial.io";
+            get{return "https://weather.api.ndustrial.io";}
         }
 
         public object getForecast(int location_id)
