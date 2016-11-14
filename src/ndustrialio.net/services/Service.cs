@@ -61,7 +61,8 @@ namespace com.ndustrialio.api.services
                     getAcessToken();
 
                     // Retry method with new token
-                    return base.execute(request);
+                    // Reset request so it can run again
+                    return base.execute(request.reset());
 
                 } else
                 {
@@ -78,8 +79,8 @@ namespace com.ndustrialio.api.services
             {
                 dynamic decoded = JObject.Parse(exception);
 
-                if (decoded.status_code == 401 &&
-                    decoded.response_data == "jwt expired")
+                if (decoded.code == 401 &&
+                    decoded.message == "jwt expired")
                 {
                     return true;
                 } else

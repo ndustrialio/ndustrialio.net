@@ -51,14 +51,20 @@ namespace com.ndustrialio.api.http
 
         public APIRequest baseURL(string base_url)
         {
+            _client.BaseAddress = new Uri(base_url);
             _baseURL = base_url;
-            _client.BaseAddress = new Uri(_baseURL);
             return this;
         }
 
         public string baseURL()
         {
             return _baseURL;
+        }
+
+        public APIRequest reset()
+        {
+            _client = new HttpClient();
+            return this;
         }
 
         public APIRequest version(bool version)
@@ -82,9 +88,9 @@ namespace com.ndustrialio.api.http
             return _authorize;
         }
 
-        public APIRequest headers(string key, string value)
+        public APIRequest headers(string headerKey, string headerValue)
         {
-            _headers.Add(key, value);
+            _headers[headerKey] = headerValue;
 
             return this;
         }
