@@ -77,10 +77,10 @@ namespace com.ndustrialio.api.services
         {
             try
             {
-                dynamic decoded = JObject.Parse(exception);
+                JObject decoded = JObject.Parse(exception);
 
-                if (decoded.code == 401 &&
-                    decoded.message == "jwt expired")
+                if ((int)decoded["code"] == 401 &&
+                    (string)decoded["message"] == "jwt expired")
                 {
                     return true;
                 } else
