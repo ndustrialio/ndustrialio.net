@@ -47,6 +47,25 @@ namespace com.ndustrialio.api.services
             return ret;
         }
 
+        public object getFeed(string key)
+        {
+            string uri = FeedService.URI;
+
+            Dictionary<string, string> requestParams = new Dictionary<string, string>()
+            {
+                {"key", key}
+            };
+
+
+            APIResponse response = this.execute(new GET(uri: uri, parameters:requestParams));
+
+            dynamic ret = JObject.Parse(response.ToString());
+
+            dynamic feed = ret.records[0];
+
+            return feed;
+        }
+
 
         //  def getFieldDescriptors(self, feed_id, limit=100, offset=0, execute=True):
 
