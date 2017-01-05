@@ -51,6 +51,8 @@ namespace com.ndustrialio.api.services
 
         public virtual async Task<APIResponse> executeAsync(APIRequest request)
         {
+            request.baseURL(this.BaseURL);
+            
             // Set authorization headers
             if (request.authorize())
             {
