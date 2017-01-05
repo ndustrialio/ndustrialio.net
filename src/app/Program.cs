@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using com.ndustrialio.api.services;
+using Newtonsoft.Json.Linq;
+using com.ndustrialio.api.ngest;
 
 namespace ConsoleApplication
 {
@@ -9,12 +11,18 @@ namespace ConsoleApplication
         public static void Main(string[] args)
         {
 
+            // Instantiate feed service.. in this case 
+            // client_id and secret are in the environment
             var feeds = new FeedService();
 
-            dynamic feed = feeds.getFeed(key: "egauge15550");
+            // Get feed details by key.. obviously change this to your key
+            List<OutputField> fields = feeds.getOutputFields(output_id: 1203);
 
-            string timezone = feed.timezone;
-            string key = feed.key;
+            // Grab feed details
+
+
+            // Good to go!
+            //var ngest = new NgestClient(key, feed_token, timezone);
 
             // Initialize Flywheeling services
             // Here you must provide your Client ID and Client Secret somehow.

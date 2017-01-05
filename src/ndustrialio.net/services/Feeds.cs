@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 
@@ -7,6 +8,57 @@ using com.ndustrialio.api.http;
 
 namespace com.ndustrialio.api.services
 {
+
+    public class Feed
+    {
+        public string Key {get; set;}
+        
+        public string Token {get; set;}
+
+        public string Timezone {get; set;}
+    }
+
+    public class Output
+    {
+        public int id {get; set;}
+
+        public int feed_id {get; set;}
+
+        public string key {get; set;}
+
+        public string label {get; set;}
+
+        public string status {get; set;}
+
+        public int facility_id {get; set;}
+
+        public bool is_logical {get; set;}
+
+        public int output_type_id {get; set;}
+    }
+
+    public class OutputField
+    {
+        public int id {get; set;}
+
+        public int output_id {get; set;}
+
+        public string field_descriptor {get; set;}
+
+        public string field_name {get; set;}        
+        public string field_human_name {get; set;}
+
+        public string label {get; set;}
+
+        public bool is_totalizer {get; set;}        
+        
+        public string is_labeled {get; set;}
+
+        public double scalar {get; set;}        
+        
+        public double divisor {get; set;}        
+        public string units {get; set;}
+    }
 
 	public class FeedService : Service
 	{
@@ -25,29 +77,29 @@ namespace com.ndustrialio.api.services
             get{return "https://feeds.api.ndustrial.io";}
         }
 
-        public object getFeeds(Dictionary <String, String> parameters=null)
+        public List<Feed> getFeeds(Dictionary <String, String> parameters=null)
         {
 
             APIResponse response = this.execute(new GET(uri:FeedService.URI, parameters:parameters));
 
-            dynamic ret = JArray.Parse(response.ToString());
+            List<Feed> ret = JsonConvert.DeserializeObject<List<Feed>>(response.ToString());
 
             return ret;
         }
 
-		public object getFeed(int id)
+		public Feed getFeed(int id)
 		{
 			string uri = FeedService.URI + "/" + id;
 			
 
             APIResponse response = this.execute(new GET(uri));
 
-            dynamic ret = JObject.Parse(response.ToString());
+            Feed ret = JsonConvert.DeserializeObject<Feed>(response.ToString());
 
             return ret;
         }
 
-        public object getFeed(string key)
+        public Feed getFeed(string key)
         {
             string uri = FeedService.URI;
 
@@ -59,11 +111,16 @@ namespace com.ndustrialio.api.services
 
             APIResponse response = this.execute(new GET(uri: uri, parameters:requestParams));
 
-            dynamic ret = JObject.Parse(response.ToString());
+            JObject feed = (JObject)JObject.Parse(response.ToString())["records"][0];
 
-            dynamic feed = ret.records[0];
+            Feed ret = new Feed();
 
-            return feed;
+            ret.Key = (string)feed["key"];
+            ret.Timezone = (string)feed["timezone"];
+            ret.Token = (string)feed["token"];
+
+
+            return ret;
         }
 
 
@@ -117,7 +174,7 @@ namespace com.ndustrialio.api.services
         }
 
 
-        public object getFeedOutputs(int feed_id, int limit=100, int offset=0)
+        public List<Output> getFeedOutputs(int feed_id, int limit=100, int offset=0)
         {
             object[] uriChunks = {FeedService.URI, feed_id, "outputs"};
 
@@ -130,20 +187,20 @@ namespace com.ndustrialio.api.services
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks), 
                                                     parameters: requestParams));
 
-            dynamic ret = JObject.Parse(response.ToString());
+            PagedResponse<Output> ret = JsonConvert.DeserializeObject<PagedResponse<Output>>(response.ToString());
 
-            return ret;
+            return ret.records;
         }
 
-        public object getOutputFields(int output_id)
+        public List<OutputField> getOutputFields(int output_id)
         {
             object[] uriChunks = {"outputs", output_id, "fields"};
 
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks)));
 
-            dynamic ret = JObject.Parse(response.ToString());
+            PagedResponse<OutputField> ret = JsonConvert.DeserializeObject<PagedResponse<OutputField>>(response.ToString());
 
-            return ret;
+            return ret.records;
 
         }
 
