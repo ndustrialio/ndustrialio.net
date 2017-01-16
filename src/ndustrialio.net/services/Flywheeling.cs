@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using com.ndustrialio.api.http;
 using Newtonsoft.Json.Linq;
@@ -14,7 +15,9 @@ namespace com.ndustrialio.api.services
         {
             foreach(var setpoint in json)
             {
-                this.Add(DateTime.Parse(setpoint.Key), setpoint.Value.ToObject<bool>());
+                this.Add(DateTime.Parse(s: setpoint.Key, 
+                                    provider: CultureInfo.CurrentCulture,
+                                    styles: DateTimeStyles.AdjustToUniversal), setpoint.Value.ToObject<bool>());
             }
         }
     }

@@ -111,6 +111,7 @@ namespace com.ndustrialio.api.services
 
             APIResponse response = this.execute(new GET(uri: uri, parameters:requestParams));
 
+            // TODO: fix when feed doesn't exist
             JObject feed = (JObject)JObject.Parse(response.ToString())["records"][0];
 
             Feed ret = new Feed();
