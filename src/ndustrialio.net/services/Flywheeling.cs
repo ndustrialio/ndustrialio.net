@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 namespace com.ndustrialio.api.services
 {
 
-    public class SetpointData<T> : Dictionary<DateTime, T>
+    public class SetpointData : Dictionary<DateTime, string>
     {
         public SetpointData(JObject json) : base()
         {
@@ -17,7 +17,7 @@ namespace com.ndustrialio.api.services
             {
                 this.Add(DateTime.Parse(s: setpoint.Key, 
                                     provider: CultureInfo.CurrentCulture,
-                                    styles: DateTimeStyles.AdjustToUniversal), setpoint.Value.ToObject<T>());
+                                    styles: DateTimeStyles.AdjustToUniversal), setpoint.Value.ToObject<string>());
             }
         }
     }
@@ -102,37 +102,37 @@ namespace com.ndustrialio.api.services
 
         }
 
-        public Dictionary<string, SetpointData<double>> getSchemesForSystem(string system_id)
+        public Tuple<string, Dictionary<string, SetpointData>> getSchemesForSystem(string system_id)
         {
             object[] uriChunks = {"systems", system_id, "schemes", "data"};
 
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks)));
 
 
-            var ret = new Dictionary<string, SetpointData<double>>();
+            var zone_data = new Dictionary<string, SetpointData>();
 
 
             // Decode and package response data
             JObject responseData = JObject.Parse(response.ToString());
 
-
+            string scheme_output_type = responseData.GetValue("scheme_output_type").ToObject<string>();
 
             foreach (var data in responseData.GetValue("data_by_zone").ToObject<JObject>())
             {
-                ret.Add(data.Key, new SetpointData<double>(data.Value.ToObject<JObject>()));
+                zone_data.Add(data.Key, new SetpointData(data.Value.ToObject<JObject>()));
             }
 
-            return ret;
+            return Tuple.Create(scheme_output_type, zone_data);
         }
 
-        public Dictionary<string, SetpointData<bool>> getSetPointsForSystem(string system_id)
+        public Dictionary<string, SetpointData> getSetPointsForSystem(string system_id)
         {
             object[] uriChunks = {"systems", system_id, "runs", "data"};
 
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks)));
 
 
-            var ret = new Dictionary<string, SetpointData<bool>>();
+            var ret = new Dictionary<string, SetpointData>();
 
 
             // Decode and package response data
@@ -140,7 +140,7 @@ namespace com.ndustrialio.api.services
 
             foreach (var data in responseData)
             {
-                ret.Add(data.Key, new SetpointData<bool>(data.Value.ToObject<JObject>()));
+                ret.Add(data.Key, new SetpointData(data.Value.ToObject<JObject>()));
             }
 
             return ret;
@@ -148,13 +148,13 @@ namespace com.ndustrialio.api.services
 
 
 
-        public SetpointData<bool> getSetPointsForZone(string zone_id)
+        public SetpointData getSetPointsForZone(string zone_id)
         {
             object[] uriChunks = {"zones", zone_id, "runs", "data"};
 
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks)));
 
-            var ret = new SetpointData<bool>(JObject.Parse(response.ToString()));
+            var ret = new SetpointData(JObject.Parse(response.ToString()));
 
             return ret;
         }

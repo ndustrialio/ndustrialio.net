@@ -18,12 +18,12 @@ namespace app
 
                 var setpoints = service.getSchemesForSystem(system_id: system.SystemID);
 
-                foreach(KeyValuePair<string, SetpointData<double>> system_setpoint in setpoints)
+                foreach(KeyValuePair<string, SetpointData> system_setpoint in setpoints.Item2)
                 {
                     Console.WriteLine("System name" + system_setpoint.Key);
 
                     // Setpoints are a simple Dictionary<DateTime, bool>
-                    foreach(KeyValuePair<DateTime, double> setpoint in system_setpoint.Value)
+                    foreach(KeyValuePair<DateTime, string> setpoint in system_setpoint.Value)
                     {
                         Console.WriteLine("\tAt " + setpoint.Key + ": " + setpoint.Value);
                     }
