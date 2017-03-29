@@ -115,7 +115,9 @@ namespace com.ndustrialio.api.services
             // Decode and package response data
             JObject responseData = JObject.Parse(response.ToString());
 
-            foreach (var data in responseData)
+
+
+            foreach (var data in responseData.GetValue("data_by_zone").ToObject<JObject>())
             {
                 ret.Add(data.Key, new SetpointData<double>(data.Value.ToObject<JObject>()));
             }
