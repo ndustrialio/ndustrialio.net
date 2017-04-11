@@ -172,7 +172,7 @@ namespace com.ndustrialio.api.services
             return ret;
         }
 
-        public object getFieldDescriptors(int feed_id, int limit=100, int offset=0)
+        public JObject getFieldDescriptors(int feed_id, int limit=100, int offset=0)
         {
             object[] uriChunks = {FeedService.URI, feed_id, "fields"};
 
@@ -185,14 +185,13 @@ namespace com.ndustrialio.api.services
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks), 
                                                     parameters: requestParams));
 
-            dynamic ret = JObject.Parse(response.ToString());
 
-            return ret;
+            return JObject.Parse(response.ToString());
 
                                     
         }
 
-        public object getUnprovisionedFieldDescriptors(int feed_id, int limit=100, int offset=0)
+        public JObject getUnprovisionedFieldDescriptors(int feed_id, int limit=100, int offset=0)
         {
             object[] uriChunks = {FeedService.URI, feed_id, "fields", "unprovisioned"};
 
@@ -205,9 +204,9 @@ namespace com.ndustrialio.api.services
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks), 
                                                     parameters: requestParams));
 
-            dynamic ret = JObject.Parse(response.ToString());
+            
 
-            return ret;
+            return JObject.Parse(response.ToString());
         }
 
 
@@ -263,7 +262,7 @@ namespace com.ndustrialio.api.services
             return new DataResponse(JObject.Parse(response.ToString()));
         }
 
-        public object getUnprovisionedData(int feed_id, string field_descriptor, int window, DateTime time_start, DateTime? time_end=null)
+        public JObject getUnprovisionedData(int feed_id, string field_descriptor, int window, DateTime time_start, DateTime? time_end=null)
         {
             object[] uriChunks = {"feeds", feed_id, "fields", field_descriptor, "data"};
 
@@ -281,9 +280,8 @@ namespace com.ndustrialio.api.services
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks), 
                                                     parameters: requestParams));
 
-            dynamic ret = JObject.Parse(response.ToString());
+            return JObject.Parse(response.ToString());
 
-            return ret;
         }
 	}
 	
