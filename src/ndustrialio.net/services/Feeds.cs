@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 
 using com.ndustrialio.api.http;
+using System.Collections;
 
 namespace com.ndustrialio.api.services
 {
@@ -59,6 +61,52 @@ namespace com.ndustrialio.api.services
         public double divisor {get; set;}        
         public string units {get; set;}
     }
+
+    public class DataResponse : IEnumerable<Tuple<DateTime, string>>
+    {
+        public int Count {get; set;}
+
+        public bool HasMore {get; set;}
+
+        public string NextPageURL {get; set;}
+
+        public List<Tuple<DateTime, string>> Records {get; set;}
+
+        public DataResponse(JObject apiResponse) 
+        {
+            Count = (int)apiResponse["meta"]["count"];
+
+            HasMore = (bool)apiResponse["meta"]["has_more"];
+
+            NextPageURL = (string)apiResponse["meta"]["next_page_url"];
+
+            List<JObject> recordsList = apiResponse["records"].ToObject<List<JObject>>();
+
+            Records = new List<Tuple<DateTime, string>>();
+
+            foreach (var data in recordsList)
+            {
+                Records.Add(new Tuple<DateTime, string>(DateTime.Parse(s: data["event_time"].ToObject<string>(), 
+                                    provider: CultureInfo.CurrentCulture,
+                                    styles: DateTimeStyles.AdjustToUniversal), 
+                                    data["value"].ToObject<string>()));
+            }
+        }
+
+        public IEnumerator<Tuple<DateTime, string>> GetEnumerator()
+        {
+            foreach(var data in Records)
+            {
+                yield return data;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+
 
 	public class FeedService : Service
 	{
@@ -123,18 +171,6 @@ namespace com.ndustrialio.api.services
 
             return ret;
         }
-
-
-        //  def getFieldDescriptors(self, feed_id, limit=100, offset=0, execute=True):
-
-        // assert isinstance(feed_id, int)
-        // assert isinstance(limit, int)
-        // assert isinstance(offset, int)
-
-        // params = {'limit': limit,
-        //           'offset': offset}
-
-        // return self.execute(GET('feeds/{}/fields'.format(feed_id)).params(params), execute=execute)
 
         public object getFieldDescriptors(int feed_id, int limit=100, int offset=0)
         {
@@ -205,7 +241,7 @@ namespace com.ndustrialio.api.services
 
         }
 
-        public object getData(int output_id, string field_human_name, int window, DateTime time_start, DateTime? time_end=null)
+        public DataResponse getData(int output_id, string field_human_name, int window, DateTime time_start, DateTime? time_end=null)
         {
             object[] uriChunks = {"outputs", output_id, "fields", field_human_name, "data"};
 
@@ -213,6 +249,7 @@ namespace com.ndustrialio.api.services
             {
                 // Convert to epoch-seconds
                 {"timeStart", time_start.Subtract(new DateTime(1970,1,1,0,0,0, DateTimeKind.Utc)).TotalSeconds.ToString()},
+                {"window", window.ToString()}
             };
 
             if (time_end != null)
@@ -223,9 +260,7 @@ namespace com.ndustrialio.api.services
             APIResponse response = this.execute(new GET(uri: String.Join("/", uriChunks), 
                                                     parameters: requestParams));
 
-            dynamic ret = JObject.Parse(response.ToString());
-
-            return ret;
+            return new DataResponse(JObject.Parse(response.ToString()));
         }
 
         public object getUnprovisionedData(int feed_id, string field_descriptor, int window, DateTime time_start, DateTime? time_end=null)
