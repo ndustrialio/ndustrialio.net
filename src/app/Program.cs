@@ -7,15 +7,10 @@ namespace app
     {
         static void Main(string[] args)
         {
-            FeedService feeds = new FeedService();
+            FlywheelingService service = new FlywheelingService();
+            var fieldMetrics = service.getAvgForRoom("Room 11");
 
-            var response = feeds.getData(1047, "Energy_Real_In", 60, new DateTime(2017, 04, 11, 2, 00, 00));
-
-            foreach(var data in response)
-            {
-                Console.WriteLine(data.Item1.ToString() + ": " + data.Item2);
-            }
-
+            Console.WriteLine("Maximum:" + fieldMetrics.metrics.maximum);
         }
     }
 }

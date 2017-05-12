@@ -1,8 +1,25 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace com.ndustrialio.api.http
 {
+    public class PagedResponse<T>
+    {
+        public class MetaData
+        {
+            public int offset {get; set;}
+            public int totalRecords {get; set;}
+        }
+        public List<T> records {get; set;}
+
+        public MetaData _metadata {get; set;}
+
+
+    }
+
+
     public class APIResponse
     {
         protected int _statusCode;
