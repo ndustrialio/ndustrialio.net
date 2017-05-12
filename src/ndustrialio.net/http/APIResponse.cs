@@ -1,11 +1,14 @@
 ﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Collections;
 
+
 namespace com.ndustrialio.api.http
 {
-    public class PagedResponse<T>
+    [JsonObject]
+    public class PagedResponse<T> : IEnumerable<T>
     {
         public class MetaData
         {
@@ -16,7 +19,18 @@ namespace com.ndustrialio.api.http
 
         public MetaData _metadata {get; set;}
 
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            foreach(var record in records)
+            {
+                yield return record;
+            }
+        }
 
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

@@ -227,7 +227,7 @@ namespace com.ndustrialio.api.services
 
                 var sensor_data = JsonConvert.DeserializeObject<PagedResponse<Sensor>>(sensors.ToString());
                 
-                foreach(var sensor in sensor_data.records)
+                foreach(var sensor in sensor_data)
                 {
                     sensor_ids.Add(sensor.sensor_id);                
                 }
