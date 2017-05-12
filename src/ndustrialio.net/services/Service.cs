@@ -10,18 +10,6 @@ using com.ndustrialio.api.http;
 namespace com.ndustrialio.api.services
 {
 
-    public class PagedResponse<T>
-    {
-        public class MetaData
-        {
-            public int offset {get; set;}
-            public int totalRecords {get; set;}
-        }
-        public List<T> records {get; set;}
-
-        public MetaData _metadata {get; set;}
-    }
-
     public abstract class Service : APIService
     {
         private string _clientID, _clientSecret;

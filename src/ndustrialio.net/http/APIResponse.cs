@@ -1,8 +1,39 @@
 ﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Collections;
+
 
 namespace com.ndustrialio.api.http
 {
+    [JsonObject]
+    public class PagedResponse<T> : IEnumerable<T>
+    {
+        public class MetaData
+        {
+            public int offset {get; set;}
+            public int totalRecords {get; set;}
+        }
+        public List<T> records {get; set;}
+
+        public MetaData _metadata {get; set;}
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            foreach(var record in records)
+            {
+                yield return record;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
     public class APIResponse
     {
         protected int _statusCode;

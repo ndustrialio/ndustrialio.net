@@ -11,6 +11,28 @@ using System.Collections;
 namespace com.ndustrialio.api.services
 {
 
+    public class FieldMetrics
+    {
+        public class Metrics
+        {
+            public double mean {get; set;}
+            public double minimum {get; set;}
+            public double maximum {get; set;}
+            public double standard_deviation {get; set;}
+
+        }
+
+        public class Parameters
+        {
+            public string time {get; set;}
+            public int stale_seconds {get; set;}
+
+            public string human_time {get; set;}
+        }
+        public Metrics metrics;
+        public Parameters parameters;
+    }
+
     public class Feed
     {
         public string Key {get; set;}
@@ -282,6 +304,20 @@ namespace com.ndustrialio.api.services
 
             return JObject.Parse(response.ToString());
 
+        }
+
+        public FieldMetrics getFieldMetrics(List<int> output_ids, List<string> labels)
+        {
+            var body = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                {"output_id_list", output_ids},
+                {"labels", labels}
+            });
+
+            APIResponse response = this.execute(new POST(uri:"metrics/fieldDataMetrics",
+                                                        body: body));
+
+            return JsonConvert.DeserializeObject<FieldMetrics>(response.ToString());
         }
 	}
 	

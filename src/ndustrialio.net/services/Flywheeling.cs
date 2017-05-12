@@ -2,12 +2,25 @@ using System;
 using System.Globalization;
 using System.Collections.Generic;
 using com.ndustrialio.api.http;
+using System.Linq;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 
 
 namespace com.ndustrialio.api.services
 {
+
+    public class Sensor
+    {
+        public int sensor_id {get; set;}
+        public string id {get; set;}
+        public string area_id {get; set;}
+        public string sensor_type {get; set;}
+        public string label {get; set;}
+        public string created_at {get; set;}
+        public string updated_at {get; set;}
+    }
 
     public class SetpointData : Dictionary<DateTime, string>
     {
@@ -183,5 +196,49 @@ namespace com.ndustrialio.api.services
             return ret;
 
         } 
+
+
+        public FieldMetrics getAvgForRoom(string room_name)
+        {
+            // Get facility_id
+            var facility_id = getNodes().Keys.First();
+
+            var p = new Dictionary<string, string>
+            {
+                {"label", room_name}
+            };
+
+            // Get area IDs
+            var areas = this.execute(new GET(uri: String.Format("facilities/{0}/areas", facility_id),
+                                                        parameters: p));
+
+            var area_ids = new List<string>();
+            foreach(var area_data in JArray.Parse(areas.ToString()))
+            {
+                area_ids.Add(area_data["id"].ToObject<string>());
+            }
+
+            // Get sensor IDs
+            var sensor_ids = new List<int>();
+
+            foreach(var area_id in area_ids)
+            {
+                var sensors = this.execute(new GET(uri: String.Format("areas/{0}/sensors", area_id)));
+
+                var sensor_data = JsonConvert.DeserializeObject<PagedResponse<Sensor>>(sensors.ToString());
+                
+                foreach(var sensor in sensor_data)
+                {
+                    sensor_ids.Add(sensor.sensor_id);                
+                }
+            }
+
+            // Get average temp for those sensors
+            FeedService feeds = new FeedService();
+
+            return feeds.getFieldMetrics(sensor_ids,new List<string>{"Temperature"});
+
+
+        }
     }
 }
