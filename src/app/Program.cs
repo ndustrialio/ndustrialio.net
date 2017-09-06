@@ -8,7 +8,7 @@ namespace app
         static void Main(string[] args)
         {
             FlywheelingService service = new FlywheelingService();
-            var fieldMetrics = service.getAvgForRoom("Room 11");
+            var fieldMetrics = service.getAvgForRoom("Room 3");
 
             Console.WriteLine("Maximum:" + fieldMetrics.metrics.maximum);
         }

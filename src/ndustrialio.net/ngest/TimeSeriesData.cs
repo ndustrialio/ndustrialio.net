@@ -29,15 +29,22 @@ namespace com.ndustrialio.api.ngest
             _messages.Add(_currentMessage);
         }
 
+        public void addValue(DateTimeOffset timestamp, String field, Object value)
+        {
+            // Convert to UTC
+            addValue(timestamp.ToUniversalTime(), field, value);
+        }
+
         public void addValue(DateTime timestamp, String field, Object value)
         {
             DateTime delocalized;
 
 
             // Delocalize timestamp, if it's not already UTC
-            if (_feedTimeZone != TimeZoneInfo.Utc)
+            if (timestamp.Kind != DateTimeKind.Utc)
             {
-                delocalized = TimeZoneInfo.ConvertTime(timestamp, _feedTimeZone);
+                // DateTimeKind.Local or DateTimeKind.Unspecified 
+                delocalized = TimeZoneInfo.ConvertTime(timestamp, _feedTimeZone, TimeZoneInfo.Utc);
             } else
             {
                 delocalized = timestamp;

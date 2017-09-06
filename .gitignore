@@ -10,3 +10,4 @@ src/ndustrialio.net/obj/
 /src/app/.vs/
 .DS_Store
 
+.idea/
