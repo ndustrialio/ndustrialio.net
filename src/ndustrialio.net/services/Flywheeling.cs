@@ -198,7 +198,7 @@ namespace com.ndustrialio.api.services
         } 
 
 
-        public FieldMetrics getAvgForRoom(string room_name)
+        public Tuple<List<int>, List<string>> getSensorsForRoom(string room_name)
         {
             // Get facility_id
             var facility_id = getNodes().Keys.First();
@@ -233,10 +233,9 @@ namespace com.ndustrialio.api.services
                 }
             }
 
-            // Get average temp for those sensors
-            FeedService feeds = new FeedService();
 
-            return feeds.getFieldMetrics(sensor_ids,new List<string>{"Temperature"});
+
+            return new Tuple<List<int>, List<String>>(sensor_ids,new List<string>{"Temperature"});
 
 
         }
