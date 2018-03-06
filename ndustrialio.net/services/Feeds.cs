@@ -15,9 +15,13 @@ namespace com.ndustrialio.api.services
     {
         public class Metrics
         {
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public double mean {get; set;}
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public double minimum {get; set;}
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public double maximum {get; set;}
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public double standard_deviation {get; set;}
 
         }

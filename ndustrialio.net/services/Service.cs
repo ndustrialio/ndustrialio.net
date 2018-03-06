@@ -41,7 +41,7 @@ namespace com.ndustrialio.api.services
 
         private void getAcessToken()
         {
-            Auth0Service service = new Auth0Service();
+            var service = new ContxtAuthService();
 
             _accessToken = service.getAccessToken(_clientID, _clientSecret, this.Audience);
         }
