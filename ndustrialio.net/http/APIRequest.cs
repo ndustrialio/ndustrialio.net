@@ -167,6 +167,10 @@ namespace com.ndustrialio.api.http
 
             return sb.ToString();
         }
+
+        public override string ToString(){
+            return this._method + " " + this._baseURL + buildURI();
+        }  
     }
 
 
@@ -249,4 +253,5 @@ namespace com.ndustrialio.api.http
             return _client.SendAsync(this.toHttpRequestMessage());
         }
     }
+
 }

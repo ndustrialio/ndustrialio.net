@@ -5,12 +5,12 @@ using Newtonsoft.Json;
 namespace com.ndustrialio.api.services
 {
 
-    public class Auth0Service : APIService
+    public class ContxtAuthService : APIService
 
     {
         public override string BaseURL
         {
-            get{return "https://ndustrialio.auth0.com";}
+            get{return "https://contxtauth.com";}
         }
 
         public string getAccessToken(string client_id, 
@@ -26,8 +26,7 @@ namespace com.ndustrialio.api.services
             // Need to do a POST to auth0 to get our credentials
             APIRequest credential_request = new POST(uri: "oauth/token", 
                                         body: JsonConvert.SerializeObject(body))
-                                        .authorize(false) // Not our API, don't authorize
-                                        .version(false); // Not our API, don't version
+                                        .authorize(false);
 
             APIResponse response = execute(credential_request);
 

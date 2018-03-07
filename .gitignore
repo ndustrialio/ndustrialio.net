@@ -11,3 +11,7 @@ src/ndustrialio.net/obj/
 .DS_Store
 
 .idea/
+ndustrialio.net/obj/
+app/obj/
+app/bin/
+ndustrialio.net/bin/
