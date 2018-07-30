@@ -81,6 +81,45 @@ namespace com.ndustrialio.api.ngest
             }
         }
 
+        public void addTimestampValues(DateTime timestamp, TimeSeriesDataObject timeData)
+        {
+            DateTime delocalized;
+
+
+            // Delocalize timestamp, if it's not already UTC
+            if (timestamp.Kind != DateTimeKind.Utc)
+            {
+                // DateTimeKind.Local or DateTimeKind.Unspecified 
+                delocalized = TimeZoneInfo.ConvertTime(timestamp, _feedTimeZone, TimeZoneInfo.Utc);
+            }
+            else
+            {
+                delocalized = timestamp;
+            }
+
+            // Stringify timestamps.. basically
+            String delocalizedStr = delocalized.ToString(TIMESTAMP_FORMAT);
+
+            // Try adding the data point to the current message
+            bool accepted = _currentMessage.addData(
+                                    delocalizedStr,
+                                    timeData);
+
+            if (!accepted)
+            {
+                // Current message is full!
+
+                // Create new message
+                _currentMessage = new NgestMessage(NgestMessage.TIMESERIES_TYPE, _feedKey);
+
+                // Add data.. no way for this to fail
+                _currentMessage.addData(delocalizedStr, timeData);
+
+                // Add to messages list
+                _messages.Add(_currentMessage);
+            }
+        }
+
         public List<String> getJSONData()
         {
             List<String> ret = new List<String>();
