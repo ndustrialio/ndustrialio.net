@@ -26,6 +26,15 @@ namespace com.ndustrialio.api.ngest
 
         }
 
+        public NgestClient(string feed_key, string feed_token, TimeZoneInfo feed_timezone)
+        {
+            _feedKey = feed_key;
+            _feedToken = feed_token;
+            // 
+            _timeZone = feed_timezone;
+
+        }
+
 
         private TimeZoneInfo mapTimezones(string feed_timezone)
         {
