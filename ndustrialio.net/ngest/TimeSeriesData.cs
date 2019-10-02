@@ -76,6 +76,7 @@ namespace com.ndustrialio.api.ngest
             }
             catch (Exception e)
             {
+                Console.WriteLine("Error: " + e.Message);
                 Console.WriteLine("Field ID: " + field + " already exists at: "
                     + timestamp.ToString(TIMESTAMP_FORMAT));
             }

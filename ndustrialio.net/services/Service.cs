@@ -90,6 +90,7 @@ namespace com.ndustrialio.api.services
 
             } catch (JsonException e)
             {
+                Console.WriteLine("Error: " + e.Message);
                 // Not valid JSON, return false
                 return false;
             }
